@@ -1,7 +1,7 @@
 #pragma once
 
 #include "ProtobufModule.h"
-#include "mesh/MeshTypes.hpp"
+#include "MeshTypes.h"
 
 class AutoResponseModule : public ProtobufModule
 {
