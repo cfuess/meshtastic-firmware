@@ -912,13 +912,12 @@ void setup()
 
 // buttons are now inputBroker, so have to come after setupModules
 #if HAS_BUTTON
-    int pullup_sense = 0;
 #ifdef INPUT_PULLUP_SENSE
     // Some platforms (nrf52) have a SENSE variant which allows wake from sleep - override what OneButton did
 #ifdef BUTTON_SENSE_TYPE
-    pullup_sense = BUTTON_SENSE_TYPE;
+    int pullup_sense = BUTTON_SENSE_TYPE;
 #else
-    pullup_sense = INPUT_PULLUP_SENSE;
+    int pullup_sense = INPUT_PULLUP_SENSE;
 #endif
 #endif
 #if defined(ARCH_PORTDUINO)
@@ -1650,7 +1649,7 @@ void handleAutoResponse(const meshtastic_MeshPacket &mp)
 
     LOG_ERROR("Response: %s", response);
 
-    meshtastic_MeshPacket *p = allocDataPacket();
+    meshtastic_MeshPacket *p = service->allocDataPacket();
     p->to = mp.from;
     p->channel = mp.channel;
     p->want_ack = false;
