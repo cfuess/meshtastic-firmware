@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Module.h"
+#include "ProtobufModule.h"
+#include "mesh/MeshTypes.hpp"
 
-class AutoResponseModule : public Module
+class AutoResponseModule : public ProtobufModule
 {
   public:
     AutoResponseModule();

@@ -6,11 +6,11 @@
 #include "mesh/generated/meshtastic/mesh.pb.h"
 #include <string>
 
-#define VERSION "1.2"
+#define VERSION "1.3"
 
 extern meshtastic_CannedMessageModuleConfig cannedMessageModuleConfig;
 
-AutoResponseModule::AutoResponseModule() : Module("autoresponse") {}
+AutoResponseModule::AutoResponseModule() : ProtobufModule("autoresponse") {}
 
 bool AutoResponseModule::handleReceived(const meshtastic_MeshPacket &mp)
 {
