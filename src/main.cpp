@@ -1561,9 +1561,13 @@ void loop()
 }
 #endif
 
-#define VERSION "1.6"
+#include "mesh/generated/meshtastic/cannedmessages.pb.h"
+#include <string>
+#include "MeshService.h"
 
-extern meshtastic_CannedMessageModuleConfig cannedMessageModuleConfig;
+#define VERSION "1.7"
+
+meshtastic_CannedMessageModuleConfig cannedMessageModuleConfig;
 unsigned long lastResponseTime = 0;
 
 void handleAutoResponse(const meshtastic_MeshPacket &mp)
