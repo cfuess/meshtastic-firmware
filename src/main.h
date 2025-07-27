@@ -94,5 +94,3 @@ void scannerToSensorsMap(const std::unique_ptr<ScanI2CTwoWire> &i2cScanner, Scan
 
 // We default to 4MHz SPI, SPI mode 0
 extern SPISettings spiSettings;
-
-void handleAutoResponse(const meshtastic_MeshPacket &mp);

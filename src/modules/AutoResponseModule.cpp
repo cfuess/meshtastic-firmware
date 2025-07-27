@@ -92,7 +92,7 @@ bool AutoResponseModule::handleReceived(const meshtastic_MeshPacket &mp)
 
     LOG_ERROR("Response: %s", response);
 
-    meshtastic_MeshPacket *p = allocDataPacket();
+    meshtastic_MeshPacket *p = new meshtastic_MeshPacket();
     p->to = mp.from;
     p->channel = mp.channel;
     p->want_ack = false;
