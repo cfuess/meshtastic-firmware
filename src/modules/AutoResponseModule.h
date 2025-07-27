@@ -1,14 +1,14 @@
 #pragma once
 
-#include "ProtobufModule.h"
+#include "modules/Module.h"
 
-class AutoResponseModule : public ProtobufModule
+class AutoResponseModule : public Module
 {
   public:
     AutoResponseModule();
 
   protected:
-    virtual ProcessMessage handleReceived(const meshtastic_MeshPacket &mp) override;
+    virtual bool handleReceived(const meshtastic_MeshPacket &mp) override;
 
   private:
     unsigned long lastResponseTime = 0;

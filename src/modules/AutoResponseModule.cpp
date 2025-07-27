@@ -6,67 +6,67 @@
 #include "mesh/generated/meshtastic/mesh.pb.h"
 #include <string>
 
-#define VERSION "1.1"
+#define VERSION "1.2"
 
 extern meshtastic_CannedMessageModuleConfig cannedMessageModuleConfig;
 
-AutoResponseModule::AutoResponseModule() : ProtobufModule("autoresponse") {}
+AutoResponseModule::AutoResponseModule() : Module("autoresponse") {}
 
-ProcessMessage AutoResponseModule::handleReceived(const meshtastic_MeshPacket &mp)
+bool AutoResponseModule::handleReceived(const meshtastic_MeshPacket &mp)
 {
     LOG_ERROR("AutoResponseModule received a message");
     if (mp.decoded.portnum != meshtastic_PortNum_TEXT_MESSAGE_APP)
     {
         LOG_ERROR("Message is not a text message, skipping");
-        return ProcessMessage::CONTINUE;
+        return false;
     }
 
     std::string message((char *)mp.decoded.payload.bytes, mp.decoded.payload.size);
     if (message != "hi")
     {
         LOG_ERROR("Message is not 'hi', skipping");
-        return ProcessMessage::CONTINUE;
+        return false;
     }
 
     if (cannedMessageModuleConfig.messages == nullptr || strlen(cannedMessageModuleConfig.messages) == 0)
     {
         LOG_ERROR("Canned messages are empty, skipping");
-        return ProcessMessage::CONTINUE;
+        return false;
     }
 
     if (millis() - lastResponseTime < 30000)
     {
         LOG_ERROR("Rate limit exceeded, skipping");
-        return ProcessMessage::CONTINUE;
+        return false;
     }
 
     meshtastic_NodeInfoLite *node = nodeDB->getMeshNode(mp.from);
     if (!node)
     {
         LOG_ERROR("Node not found, skipping");
-        return ProcessMessage::CONTINUE;
+        return false;
     }
 
     // Only respond to direct messages or messages on the "Testing" channel
     if (mp.to != nodeDB->getNodeNum() && strcmp(channels.getName(mp.channel), "Testing") != 0)
     {
         LOG_ERROR("Message is not a direct message or from the 'Testing' channel, skipping");
-        return ProcessMessage::CONTINUE;
+        return false;
     }
 
     LOG_ERROR("All checks passed, sending response");
     lastResponseTime = millis();
 
     float rssi = mp.rx_rssi;
-    LOG_ERROR(rssi > 0 ? "RSSI: %.2f" : "No RSSI info", rssi);
+    LOG_ERROR(rssi != 0 ? "RSSI: %.2f" : "No RSSI info", rssi);
     float snr = mp.rx_snr;
-    LOG_ERROR(snr > 0 ? "SNR: %.2f" : "No SNR info", snr);
+    LOG_ERROR(snr != 0 ? "SNR: %.2f" : "No SNR info", snr);
     int start_hops = mp.hop_start;
-    LOG_ERROR(start_hops > 0 ? "Start Hops: %d" : "No start hops info", start_hops);
+    LOG_ERROR(start_hops != 0 ? "Start Hops: %d" : "No start hops info", start_hops);
     int used_hops = mp.hop_limit > mp.hop_start ? 0 : mp.hop_start - mp.hop_limit;
-    LOG_ERROR(used_hops > 0 ? "Used Hops: %d" : "No used hops info", used_hops);
+    LOG_ERROR(used_hops != 0 ? "Used Hops: %d" : "No used hops info", used_hops);
     int limit_hops = mp.hop_limit;
-    LOG_ERROR(limit_hops > 0 ? "Limit Hops: %d" : "No limit hops info", limit_hops);
+    LOG_ERROR(limit_hops != 0 ? "Limit Hops: %d" : "No limit hops info", limit_hops);
 
     char canned_messages[sizeof(cannedMessageModuleConfig.messages)];
     strcpy(canned_messages, cannedMessageModuleConfig.messages);
@@ -75,7 +75,7 @@ ProcessMessage AutoResponseModule::handleReceived(const meshtastic_MeshPacket &m
     LOG_ERROR(current_node_location ? "Current Node Location: %s" : "No current node location info", current_node_location);
     char *autoresponse_hops_str = strtok(NULL, "|");
     int autoresponse_hops = autoresponse_hops_str ? atoi(autoresponse_hops_str) : 0;
-    LOG_ERROR(autoresponse_hops > 0 ? "Auto Response Hops: %d" : "No auto response hops info", autoresponse_hops);
+    LOG_ERROR(autoresponse_hops != 0 ? "Auto Response Hops: %d" : "No auto response hops info", autoresponse_hops);
 
     char response[256];
     snprintf(response, sizeof(response),
@@ -92,7 +92,7 @@ ProcessMessage AutoResponseModule::handleReceived(const meshtastic_MeshPacket &m
 
     LOG_ERROR("Response: %s", response);
 
-    meshtastic_MeshPacket *p = allocDataPacket();
+    meshtastic_MeshPacket *p = service->allocDataPacket();
     p->to = mp.from;
     p->channel = mp.channel;
     p->want_ack = false;
@@ -103,5 +103,5 @@ ProcessMessage AutoResponseModule::handleReceived(const meshtastic_MeshPacket &m
 
     LOG_ERROR("Response sent");
 
-    return ProcessMessage::CONTINUE;
+    return true;
 }

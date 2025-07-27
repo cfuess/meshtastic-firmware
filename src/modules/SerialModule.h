@@ -20,8 +20,6 @@ class SerialModule : public StreamAPI, private concurrency::OSThread
   public:
     SerialModule();
 
-    static bool isValidConfig(const meshtastic_ModuleConfig_SerialConfig &config);
-
   protected:
     virtual int32_t runOnce() override;
 
