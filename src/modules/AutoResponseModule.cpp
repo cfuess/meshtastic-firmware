@@ -6,11 +6,11 @@
 #include "mesh/generated/meshtastic/mesh.pb.h"
 #include <string>
 
-#define VERSION "1.3"
+#define VERSION "1.4"
 
 extern meshtastic_CannedMessageModuleConfig cannedMessageModuleConfig;
 
-AutoResponseModule::AutoResponseModule() : ProtobufModule("autoresponse") {}
+AutoResponseModule::AutoResponseModule(const char *name) : Module(name) {}
 
 bool AutoResponseModule::handleReceived(const meshtastic_MeshPacket &mp)
 {
@@ -92,7 +92,7 @@ bool AutoResponseModule::handleReceived(const meshtastic_MeshPacket &mp)
 
     LOG_ERROR("Response: %s", response);
 
-    meshtastic_MeshPacket *p = service->allocDataPacket();
+    meshtastic_MeshPacket *p = allocDataPacket();
     p->to = mp.from;
     p->channel = mp.channel;
     p->want_ack = false;
