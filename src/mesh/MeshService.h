@@ -170,3 +170,5 @@ class MeshService
 };
 
 extern MeshService *service;
+
+meshtastic_MeshPacket *allocDataPacket();

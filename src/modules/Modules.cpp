@@ -76,6 +76,8 @@
 #include "modules/GenericThreadModule.h"
 #endif
 
+#include "modules/AutoResponseModule.h"
+
 #ifdef ARCH_ESP32
 #if defined(USE_SX1280) && !MESHTASTIC_EXCLUDE_AUDIO
 #include "modules/esp32/AudioModule.h"
@@ -162,7 +164,7 @@ void setupModules()
         new PowerStressModule();
 #endif
         // Example: Put your module here
-        // new ReplyModule();
+        new AutoResponseModule();
 #if (HAS_BUTTON || ARCH_PORTDUINO) && !MESHTASTIC_EXCLUDE_INPUTBROKER
         if (config.display.displaymode != meshtastic_Config_DisplayConfig_DisplayMode_COLOR) {
             rotaryEncoderInterruptImpl1 = new RotaryEncoderInterruptImpl1();
