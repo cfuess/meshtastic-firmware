@@ -1,12 +1,12 @@
 #pragma once
 
-#include "Module.h"
+#include "ProtobufModule.h"
 #include "MeshTypes.h"
 
-class AutoResponseModule : public Module
+class AutoResponseModule : public ProtobufModule
 {
   public:
-    AutoResponseModule(const char *name);
+    AutoResponseModule();
 
   protected:
     virtual bool handleReceived(const meshtastic_MeshPacket &mp) override;

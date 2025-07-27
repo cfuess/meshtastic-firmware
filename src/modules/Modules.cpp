@@ -164,7 +164,7 @@ void setupModules()
         new PowerStressModule();
 #endif
         // Example: Put your module here
-        new AutoResponseModule("autoresponse");
+        new AutoResponseModule();
 #if (HAS_BUTTON || ARCH_PORTDUINO) && !MESHTASTIC_EXCLUDE_INPUTBROKER
         if (config.display.displaymode != meshtastic_Config_DisplayConfig_DisplayMode_COLOR) {
             rotaryEncoderInterruptImpl1 = new RotaryEncoderInterruptImpl1();
