@@ -88,13 +88,13 @@ ProcessMessage AutoResponseModule::handleReceived(const meshtastic_MeshPacket &m
     LOG_ERROR("Response: %s", response);
 
     meshtastic_MeshPacket *p = allocDataPacket();
-    if (mp.channel != 0) // If the message is from a channel
-    {
-        p->to = 0; // Send to all nodes on the channel
-    }
-    else // If the message is a direct message
+    if (!mp.channel) // If the message is a direct message
     {
         p->to = mp.from;
+    }
+    else // If the message is from a channel
+    {
+        p->to = 0; // Send to all nodes on the channel
     }
     p->channel = mp.channel;
     p->want_ack = false;
