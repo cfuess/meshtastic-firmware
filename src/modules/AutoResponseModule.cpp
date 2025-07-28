@@ -14,7 +14,7 @@ AutoResponseModule::AutoResponseModule() : SinglePortModule("autoresponse", mesh
 
 ProcessMessage AutoResponseModule::handleReceived(const meshtastic_MeshPacket &mp)
 {
-    LOG_ERROR("AutoResponseModule received a message");
+    LOG_ERROR("AutoResponseModule received a message: %s", (char *)mp.decoded.payload.bytes);
 
     std::string message((char *)mp.decoded.payload.bytes, mp.decoded.payload.size);
     if (message != "hi")
