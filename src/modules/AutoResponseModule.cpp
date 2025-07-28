@@ -88,7 +88,14 @@ ProcessMessage AutoResponseModule::handleReceived(const meshtastic_MeshPacket &m
     LOG_ERROR("Response: %s", response);
 
     meshtastic_MeshPacket *p = allocDataPacket();
-    p->to = mp.from;
+    if (mp.to == nodeDB->getNodeNum())
+    {
+        p->to = mp.from;
+    }
+    else
+    {
+        p->to = 0; // Send to all nodes on the channel
+    }
     p->channel = mp.channel;
     p->want_ack = false;
     p->decoded.payload.size = strlen(response);
